@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universidade Corporativa VMT - Vision Marine Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #F4F6F9;
+            --sidebar-bg: #070F1E; /* Azul mais escuro e exclusivo para a lateral */
+            --sidebar-hover: #132238;
+            --sidebar-active: #1B2E4A;
+            --card-bg: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            --primary-blue: #1E3A8A;
+            --compass-blue: #38BDF8; /* Azul claro exclusivo da bússola */
+            --accent-yellow: #F59E0B;
+            --status-green: #10B981;
+            --status-green-bg: #ECFDF5;
+            --status-red: #EF4444;
+            --status-red-bg: #FEF2F2;
+            --status-yellow-bg: #FFFBEB;
+            --border-color: #E2E8F0;
+            --input-bg: #FFFFFF;
+            --input-disabled-bg: #F1F5F9;
+        }
+
+        body.dark-theme {
+            --bg-main: #0F172A;
+            --card-bg: #1E293B;
+            --text-dark: #F8FAFC;
+            --text-muted: #94A3B8;
+            --text-light: #64748B;
+            --border-color: #334155;
+            --status-green-bg: #064E3B;
+            --status-red-bg: #7F1D1D;
+            --status-yellow-bg: #78350F;
+            --input-bg: #0F172A;
+            --input-disabled-bg: #1A2234;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
+        body { background-color: var(--bg-main); color: var(--text-dark); display: flex; min-height: 100vh; }
+
+        /* SIDEBAR */
+        .sidebar { width: 280px; background-color: var(--sidebar-bg); color: #FFF; display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh; z-index: 10; }
+        .sidebar-brand { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; height: 70px; }
+        .brand-titles { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+        .brand-titles h1 { font-size: 11px; font-weight: 800; letter-spacing: 0.3px; color: #FFFFFF; text-transform: uppercase; line-height: 1.3; }
+        .brand-titles span { font-size: 9px; font-weight: 600; color: var(--text-light); display: block; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .sidebar-section { padding: 20px 12px 8px 12px; }
+        .section-label { font-size: 10px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 1px; padding: 0 12px 8px 12px; }
+        
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 6px; color: #CBD5E1; text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 4px; }
+        .nav-item:hover { background-color: var(--sidebar-hover); color: #FFF; }
+        .nav-item.active { background-color: var(--sidebar-active); color: #FFF; border-left: 3px solid var(--accent-yellow); font-weight: 600; }
+
+        /* MAIN CONTAINER */
+        .main-container { flex: 1; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        /* TOP HEADER */
+        .top-header { background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 70px; }
+        .ecosystem-tabs { display: flex; gap: 8px; }
+        .eco-tab { display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+        .eco-tab.active-horizonte { background-color: #EFF6FF; border-color: var(--primary-blue); color: var(--primary-blue); }
+        .eco-tab.active-navegando { background-color: #FFFBEB; border-color: var(--accent-yellow); color: #B45309; }
+        .eco-tab:not(.active-horizonte):not(.active-navegando) { background-color: var(--bg-main); color: var(--text-muted); border-color: var(--border-color); }
+
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .theme-switcher { display: flex; background: var(--bg-main); padding: 3px; border-radius: 8px; border: 1px solid var(--border-color); gap: 2px; }
+        .theme-btn { border: none; background: transparent; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .theme-btn.active { background: var(--card-bg); color: var(--text-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        .user-profile { display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary-blue); color: #FFF; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 2px solid var(--accent-yellow); }
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-size: 13px; font-weight: 600; }
+        .user-role { font-size: 11px; color: var(--text-muted); }
+
+        /* CONTENT AREA */
+        .content-body { padding: 32px; display: grid; grid-template-columns: 1fr 340px; gap: 32px; }
+        
+        .eco-banner { grid-column: 1 / -1; padding: 24px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .eco-banner-info h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .eco-banner-info p { font-size: 13px; color: var(--text-muted); }
+        .badge-eco { font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-horizonte { background-color: #DBEAFE; color: #1E40AF; }
+        .badge-navegando { background-color: #FEF3C7; color: #92400E; }
+
+        /* CARDS */
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 16px; }
+        .course-card { background-color: var(--card-bg); border-radius: 10px; border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
+        .course-card:hover { transform: translateY(-3px); }
+        
+        .card-header-tag { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .tag-status { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+        .tag-concluido { background-color: var(--status-green-bg); color: var(--status-green); }
+        .tag-atencao { background-color: var(--status-red-bg); color: var(--status-red); }
+        .tag-pendente { background-color: var(--status-yellow-bg); color: #D97706; }
+
+        .course-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+        .course-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4; flex-grow: 1; }
+
+        .btn-action { margin-top: 14px; width: 100%; padding: 10px; border-radius: 6px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-primary { background-color: var(--sidebar-bg); color: #FFF; }
+        .btn-primary:hover { background-color: var(--primary-blue); }
+        .btn-yellow { background-color: var(--accent-yellow); color: #000; }
+        .btn-yellow:hover { background-color: #D97706; color: #FFF; }
+        .btn-disabled { background-color: #E2E8F0; color: #94A3B8; cursor: not-allowed; }
+
+        /* CERTIFICATES & AGENDA */
+        .cert-card { background-color: var(--card-bg); border-radius: 10px; border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .cert-card.locked { background-color: var(--bg-main); border-style: dashed; }
+        .lock-badge { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+        .lock-badge.unlocked { background-color: var(--status-green-bg); color: var(--status-green); }
+        .lock-badge.is-locked { background-color: var(--status-red-bg); color: var(--status-red); }
+        .cert-req { font-size: 11px; color: var(--status-red); font-weight: 600; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+
+        .agenda-card { background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border-color); padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .agenda-date-box { width: 70px; height: 70px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+        .date-urgent { background-color: var(--status-red-bg); color: var(--status-red); border: 1px solid #FCA5A5; }
+        .date-medium { background-color: var(--status-yellow-bg); color: #D97706; border: 1px solid #FCD34D; }
+        .date-free { background-color: var(--status-green-bg); color: var(--status-green); border: 1px solid #6EE7B7; }
+        .date-locked { background-color: #E2E8F0; color: #64748B; border: 1px solid #CBD5E1; }
+
+        /* FORMULÁRIOS & CONFIGURAÇÕES */
+        .form-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 12px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 6px; }
+        .form-control { width: 100%; padding: 10px 14px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-dark); font-size: 13px; }
+        .form-control:disabled { background-color: var(--input-disabled-bg); color: var(--text-muted); cursor: not-allowed; border-color: var(--border-color); }
+        .form-hint { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+        /* NOTÍCIAS & MURAL STYLES */
+        .news-card { background: var(--card-bg); border-radius: 10px; border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .prize-box { background: linear-gradient(135deg, #070F1E 0%, #1E3A8A 100%); color: #FFF; border-radius: 10px; padding: 20px; display: flex; align-items: center; justify-content: space-between; border: 2px solid var(--accent-yellow); }
+
+        /* SELETOR DE MÊS */
+        .month-selector { display: flex; align-items: center; gap: 8px; background: var(--card-bg); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; font-weight: 600; }
+        .month-btn { border: none; background: transparent; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--text-muted); }
+        .month-btn.active { background: var(--primary-blue); color: #FFF; }
+
+        /* PAINEL DE GESTÃO / EDITOR */
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        .admin-table th, .admin-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .admin-table th { background: var(--bg-main); font-weight: 700; color: var(--text-dark); }
+
+        /* RIGHT PANEL: RANKING */
+        .right-panel { display: flex; flex-direction: column; gap: 24px; }
+        .panel-block { background-color: var(--card-bg); border-radius: 10px; border: 1px solid var(--border-color); padding: 20px; }
+        .block-title { font-size: 14px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+        .ranking-list { display: flex; flex-direction: column; gap: 12px; }
+        .ranking-item { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 6px; background-color: var(--bg-main); }
+        .ranking-item.me { background-color: #EFF6FF; border: 1px solid #BFDBFE; }
+        body.dark-theme .ranking-item.me { background-color: #1E3A8A; border-color: #3B82F6; }
+        .rank-pos { font-size: 12px; font-weight: 700; width: 20px; text-align: center; }
+        .rank-avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #CBD5E1; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #334155; }
+        .rank-info { flex: 1; }
+        .rank-name { font-size: 12px; font-weight: 600; }
+        .rank-role { font-size: 10px; color: var(--text-muted); }
+        .rank-pts { font-size: 12px; font-weight: 700; color: var(--accent-yellow); }
+
+        /* MODAL E NAVEGAÇÃO INTERNA DE AULAS */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-body { background: var(--card-bg); width: 90%; max-width: 750px; border-radius: 12px; padding: 24px; position: relative; color: var(--text-dark); max-height: 85vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; border: none; background: none; color: var(--text-dark); }
+        
+        .lesson-tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; overflow-x: auto; }
+        .lesson-tab { border: none; background: var(--bg-main); padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
+        .lesson-tab.active { background: var(--primary-blue); color: #FFF; }
+        
+        .video-box { width: 100%; height: 240px; background: #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #FFF; margin-bottom: 16px; flex-direction: column; gap: 12px; text-align: center; }
+
+        /* ICON HELPER */
+        .icon { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; vertical-align: middle; }
+        .icon svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <span class="icon" style="width:26px; height:26px; color:var(--compass-blue); flex-shrink:0;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+            <div class="brand-titles">
+                <h1>UNIVERSIDADE CORPORATIVA VMT</h1>
+                <span>VISION MARINE TRAINING</span>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="section-label">Plataforma do Colaborador</div>
+            <div class="nav-item active" id="navDash" onclick="showView('dashboard')">
+                <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span> Dashboard
+            </div>
+            <div class="nav-item" id="navCert" onclick="showView('certificates')">
+                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span> Meus Certificados
+            </div>
+            <div class="nav-item" id="navAgenda" onclick="showView('agenda')">
+                <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda de Treinamentos
+            </div>
+            <div class="nav-item" id="navNews" onclick="showView('news')">
+                <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M18 18h-8"/><path d="M18 10h-8"/></svg></span> Mural & Notícias VMT
+            </div>
+        </div>
+
+        <div class="sidebar-section" id="adminMenuSection" style="display: none; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="section-label" style="color: var(--accent-yellow);">Área do Editor / Gestão</div>
+            <div class="nav-item" id="navAdmin" onclick="showView('admin')">
+                <span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span> Painel RH & Resultados
+            </div>
+        </div>
+
+        <div class="sidebar-section" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="nav-item" id="navConfig" onclick="showView('settings')">
+                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span> Configurações
+            </div>
+            <div class="nav-item" id="navSupport" onclick="showView('support')">
+                <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Suporte & Atendimento
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+        
+        <!-- TOP HEADER -->
+        <div class="top-header">
+            <div class="ecosystem-tabs" id="ecosystemHeader">
+                <button class="eco-tab active-horizonte" id="tabHorizonte" onclick="switchEcosystem('horizonte')">
+                    <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span> Horizonte Vision
+                </button>
+                <button class="eco-tab" id="tabNavegando" onclick="switchEcosystem('navegando')">
+                    <span class="icon"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></span> Navegando Carreiras
+                </button>
+            </div>
+
+            <div class="header-actions">
+                <select class="form-control" style="width: auto; font-size: 11px; font-weight: 700; background: var(--bg-main);" onchange="toggleAdminRole(this.value)">
+                    <option value="colaborador">👤 Perfil: Colaborador</option>
+                    <option value="editor">⚡ Perfil: Editor / Gestor (RH & TI)</option>
+                </select>
+
+                <div class="theme-switcher">
+                    <button class="theme-btn active" id="btnThemeLight" onclick="setTheme('light')"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span> Claro</button>
+                    <button class="theme-btn" id="btnThemeDark" onclick="setTheme('dark')"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span> Escuro</button>
+                    <button class="theme-btn" id="btnThemeAuto" onclick="setTheme('auto')"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span> Auto</button>
+                </div>
+
+                <div class="user-profile">
+                    <div class="user-avatar">LB</div>
+                    <div class="user-info">
+                        <span class="user-name">Larissa B.</span>
+                        <span class="user-role" id="roleDisplay">RH Interno</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT BODY -->
+        <div class="content-body">
+            
+            <!-- LEFT MAIN COLUMN -->
+            <div style="display: flex; flex-direction: column; gap: 24px;">
+                
+                <!-- VIEW 1: DASHBOARD DE CURSOS -->
+                <div id="viewDashboard" style="display: flex; flex-direction: column; gap: 24px;">
+                    <div class="eco-banner">
+                        <div class="eco-banner-info">
+                            <h2 id="ecoTitle"><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span> Horizonte Vision</h2>
+                            <p id="ecoDesc">Portal Institucional, Onboarding e Diretrizes Obrigatórias da Vision Marine Training.</p>
+                        </div>
+                        <span class="badge-eco badge-horizonte" id="ecoBadge">Institucional & Integração</span>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;" id="gridTitle">Módulos Obrigatórios & Onboarding</h3>
+                        <div class="courses-grid" id="coursesGrid"></div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: CERTIFICADOS -->
+                <div id="viewCertificates" style="display: none; flex-direction: column; gap: 24px;">
+                    <div class="eco-banner">
+                        <div class="eco-banner-info">
+                            <h2><span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span> Galeria de Certificações</h2>
+                            <p>Emissão de certificados oficiais e controle de conformidade individual.</p>
+                        </div>
+                        <span class="badge-eco badge-horizonte">1 Emitido · 6 Módulos Obrigatórios</span>
+                    </div>
+
+                    <div class="courses-grid">
+                        <div class="cert-card">
+                            <div class="lock-badge unlocked"><span class="icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span></div>
+                            <div>
+                                <div style="font-size: 10px; font-weight: 700; color: var(--status-green); text-transform: uppercase; margin-bottom: 4px;">Certificado Emitido</div>
+                                <div class="course-title">Onboarding & Cultura Vision Marine Training</div>
+                                <div class="course-desc">Apresentação institucional, estrutura interna, clientes e código de conduta.</div>
+                            </div>
+                            <button class="btn-action btn-yellow" onclick="alert('Baixando certificado em PDF...')">
+                                <span class="icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Baixar Certificado (PDF)
+                            </button>
+                        </div>
+
+                        <div class="cert-card locked">
+                            <div class="lock-badge is-locked"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+                            <div>
+                                <div style="font-size: 10px; font-weight: 700; color: var(--status-red); text-transform: uppercase; margin-bottom: 4px;">Bloqueado</div>
+                                <div class="course-title">Segurança da Informação & LGPD</div>
+                                <div class="course-desc">Proteção de dados pessoais, privacidade e segurança cibernética.</div>
+                                <div class="cert-req"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Conclua o teste com Nota ≥ 7.0 para liberar</div>
+                            </div>
+                            <button class="btn-action btn-disabled" disabled><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Bloqueado</button>
+                        </div>
+
+                        <div class="cert-card locked">
+                            <div class="lock-badge is-locked"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+                            <div>
+                                <div style="font-size: 10px; font-weight: 700; color: var(--status-red); text-transform: uppercase; margin-bottom: 4px;">Bloqueado</div>
+                                <div class="course-title">Prevenção ao Assédio (Lei 14.457)</div>
+                                <div class="course-desc">Treinamento legal obrigatório sobre conduta ética e canal seguro.</div>
+                                <div class="cert-req"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Conclua o teste com Nota ≥ 7.0 para liberar</div>
+                            </div>
+                            <button class="btn-action btn-disabled" disabled><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Bloqueado</button>
+                        </div>
+
+                        <div class="cert-card locked">
+                            <div class="lock-badge is-locked"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+                            <div>
+                                <div style="font-size: 10px; font-weight: 700; color: var(--status-red); text-transform: uppercase; margin-bottom: 4px;">Bloqueado</div>
+                                <div class="course-title">Saúde Mental & Riscos Psicossociais (NR-1 / SIPAT)</div>
+                                <div class="course-desc">Conscientização de bem-estar corporativo, saúde mental e ergonomia.</div>
+                                <div class="cert-req"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Conclua o curso "NR-1 & SIPAT" para liberar</div>
+                            </div>
+                            <button class="btn-action btn-disabled" disabled><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Bloqueado</button>
+                        </div>
+
+                        <div class="cert-card locked">
+                            <div class="lock-badge is-locked"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+                            <div>
+                                <div style="font-size: 10px; font-weight: 700; color: var(--status-red); text-transform: uppercase; margin-bottom: 4px;">Bloqueado</div>
+                                <div class="course-title">Liderança & Condução de Entrevistas</div>
+                                <div class="course-desc">Metodologia de Seleção Assertiva e Avaliação de Competências.</div>
+                                <div class="cert-req"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Conclua a trilha Liderança no Navegando Carreiras</div>
+                            </div>
+                            <button class="btn-action btn-disabled" disabled><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Bloqueado</button>
+                        </div>
+
+                        <div class="cert-card locked">
+                            <div class="lock-badge is-locked"><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+                            <div>
+                                <div style="font-size: 10px; font-weight: 700; color: var(--status-red); text-transform: uppercase; margin-bottom: 4px;">Bloqueado</div>
+                                <div class="course-title">Cultura de Feedback & Gestão de Clima</div>
+                                <div class="course-desc">Condução de 1-on-1s e acompanhamento contínuo do time.</div>
+                                <div class="cert-req"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span> Conclua a trilha Feedback no Navegando Carreiras</div>
+                            </div>
+                            <button class="btn-action btn-disabled" disabled><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Bloqueado</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: AGENDA DE TREINAMENTOS -->
+                <div id="viewAgenda" style="display: none; flex-direction: column; gap: 24px;">
+                    <div class="eco-banner">
+                        <div class="eco-banner-info">
+                            <h2><span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda & Cronograma de Treinamentos</h2>
+                            <p>Cronograma individual com indicação clara de prazos, disponibilidade e pré-requisitos.</p>
+                        </div>
+                        <span class="badge-eco badge-horizonte">Status de Conclusão e Prazos</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="agenda-card">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div class="agenda-date-box date-urgent">
+                                    <span style="font-size: 18px;">30</span>
+                                    <span style="font-size: 11px; text-transform: uppercase;">OUT</span>
+                                </div>
+                                <div>
+                                    <span class="tag-status tag-atencao" style="margin-bottom: 4px; display: inline-block;">Prazo Limite: 1 Semana (Urgente)</span>
+                                    <h4 style="font-size: 15px; font-weight: 700;">Prevenção ao Assédio Sexual e Moral (Lei 14.457)</h4>
+                                    <p style="font-size: 12px; color: var(--text-muted);">Treinamento obrigatório para todo o time da Vision Marine Training.</p>
+                                </div>
+                            </div>
+                            <button class="btn-action btn-yellow" style="width: auto; padding: 10px 20px;" onclick="openModal('Prevenção ao Assédio (Lei 14.457)')">Realizar Agora</button>
+                        </div>
+
+                        <div class="agenda-card">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div class="agenda-date-box date-medium">
+                                    <span style="font-size: 18px;">18</span>
+                                    <span style="font-size: 11px; text-transform: uppercase;">DEZ</span>
+                                </div>
+                                <div>
+                                    <span class="tag-status tag-pendente" style="margin-bottom: 4px; display: inline-block;">Prazo Limite: 2 Meses</span>
+                                    <h4 style="font-size: 15px; font-weight: 700;">Segurança da Informação & LGPD na Prática</h4>
+                                    <p style="font-size: 12px; color: var(--text-muted);">Diretrizes de proteção de dados e regras de TI.</p>
+                                </div>
+                            </div>
+                            <button class="btn-action btn-primary" style="width: auto; padding: 10px 20px;" onclick="openModal('Segurança da Informação & LGPD')">Iniciar Módulo</button>
+                        </div>
+
+                        <div class="agenda-card">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div class="agenda-date-box date-free">
+                                    <span class="icon" style="width:24px;height:24px;"><svg viewBox="0 0 24 24"><path d="M12 12c-2-2.3-4-4-7-4a5 5 0 0 0 0 10c3 0 5-1.7 7-4zm0 0c2 2.3 4 4 7 4a5 5 0 0 0 0-10c-3 0-5 1.7-7 4z"/></svg></span>
+                                    <span style="font-size: 9px; text-transform: uppercase; margin-top: 2px;">Livre</span>
+                                </div>
+                                <div>
+                                    <span class="tag-status tag-concluido" style="margin-bottom: 4px; display: inline-block;">Acesso Livre (Ritmo Próprio)</span>
+                                    <h4 style="font-size: 15px; font-weight: 700;">Liderança & Condução de Entrevistas Assertivas</h4>
+                                    <p style="font-size: 12px; color: var(--text-muted);">Trilha contínua no ecossistema Navegando Carreiras.</p>
+                                </div>
+                            </div>
+                            <button class="btn-action btn-primary" style="width: auto; padding: 10px 20px;" onclick="openModal('Condução de Entrevistas & R&S')">Acessar Trilha</button>
+                        </div>
+
+                        <div class="agenda-card" style="opacity: 0.8; background: var(--bg-main);">
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div class="agenda-date-box date-locked">
+                                    <span class="icon" style="width:22px;height:22px;"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+                                    <span style="font-size: 9px; text-transform: uppercase; margin-top: 2px;">Bloq.</span>
+                                </div>
+                                <div>
+                                    <span class="tag-status tag-atencao" style="margin-bottom: 4px; display: inline-block;">Bloqueado (Aguardando Requisito)</span>
+                                    <h4 style="font-size: 15px; font-weight: 700;">Gestão Avançada de Clima & Cultura Náutica</h4>
+                                    <p style="font-size: 12px; color: var(--text-muted);">Requer a conclusão prévia do curso 'Cultura de Feedback'.</p>
+                                </div>
+                            </div>
+                            <button class="btn-action btn-disabled" style="width: auto; padding: 10px 20px;" disabled><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span> Bloqueado</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 4: MURAL E NOTÍCIAS VMT -->
+                <div id="viewNews" style="display: none; flex-direction: column; gap: 24px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <h3 style="font-size: 16px; font-weight: 700;">Mural de Notícias & Eventos VMT</h3>
+                        <div class="month-selector">
+                            <span>Visualizando Mês:</span>
+                            <button class="month-btn active" id="mOut" onclick="changeMonth('outubro')">Outubro</button>
+                            <button class="month-btn" id="mNov" onclick="changeMonth('novembro')">Novembro</button>
+                            <button class="month-btn" id="mDez" onclick="changeMonth('dezembro')">Dezembro</button>
+                        </div>
+                    </div>
+
+                    <div class="prize-box">
+                        <div>
+                            <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-yellow);" id="prizeTag">🎁 Prêmio de Engajamento — Mês de Outubro</span>
+                            <h2 style="font-size: 20px; font-weight: 800; margin-top: 2px;" id="prizeTitle">Voucher Almoço Executivo / Spa Day</h2>
+                            <p style="font-size: 12px; opacity: 0.8; margin-top: 4px;">O colaborador Top 1 no Ranking de Treinamentos ganha esta experiência especial oferecida pela empresa!</p>
+                        </div>
+                        <span class="icon" style="width: 48px; height: 48px; color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="news-card">
+                            <h3 style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                <span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v2"/><path d="M12 8v2"/><path d="M17 8v2"/><path d="M7 4h.01"/><path d="M12 4h.01"/><path d="M17 4h.01"/></svg></span> Aniversariantes & Tempo de Casa
+                            </h3>
+                            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+                                <div style="background: var(--bg-main); padding: 10px; border-radius: 6px; font-size: 12px;">
+                                    <strong>🎂 Aniversários do Mês:</strong>
+                                    <ul style="margin-left: 18px; margin-top: 4px; color: var(--text-muted);" id="birthdaysList">
+                                        <li>Rogério Peixoto (19/10)</li>
+                                        <li>Raquel Spalla (25/10)</li>
+                                        <li>Luis Quesada (26/10)</li>
+                                    </ul>
+                                </div>
+                                <div style="background: var(--bg-main); padding: 10px; border-radius: 6px; font-size: 12px;">
+                                    <strong>🎉 Aniversários de Casa (Tempo de VMT):</strong>
+                                    <ul style="margin-left: 18px; margin-top: 4px; color: var(--text-muted);" id="companyYearsList">
+                                        <li>Juliana Costa — 8 Anos de VMT!</li>
+                                        <li>Gutemberg Vieira — 3 Anos de VMT!</li>
+                                        <li>Laysa Silveira — 3 Anos de VMT!</li>
+                                        <li>Larissa Fernandes — 3 Anos de VMT!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="news-card">
+                            <h3 style="font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                <span class="icon" style="color: var(--primary-blue);"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span> Datas, Campanhas & Profissões
+                            </h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;" id="campaignsList">
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 8px; border-bottom: 1px solid var(--border-color);">
+                                    <span>🎗️ <strong>Outubro Rosa (07/10)</strong></span>
+                                    <span class="tag-status tag-atencao">Campanha Ativa</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 8px; border-bottom: 1px solid var(--border-color);">
+                                    <span>⚙️ <strong>Dia do Oficial de Máquinas (15/10)</strong></span>
+                                    <span class="tag-status tag-concluido">Homenagem</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 8px;">
+                                    <span>💻 <strong>Dia do Profissional de TI (19/10)</strong></span>
+                                    <span class="tag-status tag-concluido">Homenagem</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: ÁREA DO EDITOR / GESTÃO RH & TI -->
+                <div id="viewAdmin" style="display: none; flex-direction: column; gap: 24px;">
+                    <div class="eco-banner" style="border-left: 4px solid var(--accent-yellow);">
+                        <div class="eco-banner-info">
+                            <h2><span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Painel do Editor & Gestão RH / TI</h2>
+                            <p>Acesso exclusivo para Larissa B., Fernanda e Luis. Suba múltiplos materiais e acompanhe os resultados.</p>
+                        </div>
+                        <button class="btn-action btn-yellow" style="width: auto; padding: 8px 16px;" onclick="alert('Exportando relatório para Excel...')">Exportar Resultados (Excel)</button>
+                    </div>
+
+                    <div style="background: var(--card-bg); padding: 24px; border-radius: 10px; border: 1px solid var(--border-color);">
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">📁 Gerenciar Materiais do Módulo (Aulas, PDFs e Forms)</h3>
+                        
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="font-size: 13px; color: var(--primary-blue);">1. Selecione o Módulo / Treinamento Alvo:</label>
+                            <select class="form-control" id="adminSelectModule" style="font-weight: 600;" onchange="loadAdminModuleData(this.value)">
+                                <optgroup label="🔵 Horizonte Vision (Institucional & Obrigatórios)">
+                                    <option value="Apresentação sobre a Empresa">Apresentação sobre a Empresa</option>
+                                    <option value="Nossa Estrutura Orgânica">Nossa Estrutura Orgânica</option>
+                                    <option value="Nossos Treinamentos & Serviços">Nossos Treinamentos & Serviços</option>
+                                    <option value="Sobre o Nosso Mercado & Clientes">Sobre o Nosso Mercado & Clientes</option>
+                                    <option value="Código de Conduta & Políticas">Código de Conduta & Políticas</option>
+                                    <option value="Segurança da Informação & LGPD">Segurança da Informação & LGPD</option>
+                                    <option value="Prevenção ao Assédio (Lei 14.457)">Prevenção ao Assédio (Lei 14.457)</option>
+                                    <option value="Saúde Mental & Riscos Psicossociais (NR-1 / SIPAT)">Saúde Mental & Riscos Psicossociais (NR-1 / SIPAT)</option>
+                                </optgroup>
+                                <optgroup label="🟡 Navegando Carreiras (Desenvolvimento & Liderança)">
+                                    <option value="Condução de Entrevistas & R&S">Condução de Entrevistas & R&S</option>
+                                    <option value="Cultura de Feedback & 1-on-1s">Cultura de Feedback & 1-on-1s</option>
+                                    <option value="Inteligência Emocional na Gestão">Inteligência Emocional na Gestão</option>
+                                    <option value="Gestão do Tempo & Produtividade">Gestão do Tempo & Produtividade</option>
+                                    <option value="Liderança Náutica & Clima">Liderança Náutica & Clima</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label>📹 Link Videoaula 1 (Pílula 1)</label>
+                                <input type="text" id="admVideo1" class="form-control" placeholder="URL do Vídeo 1 (Vimeo / Youtube / Drive)">
+                            </div>
+                            <div class="form-group">
+                                <label>📹 Link Videoaula 2 (Pílula 2)</label>
+                                <input type="text" id="admVideo2" class="form-control" placeholder="URL do Vídeo 2">
+                            </div>
+                            <div class="form-group">
+                                <label>📹 Link Videoaula 3 (Pílula 3)</label>
+                                <input type="text" id="admVideo3" class="form-control" placeholder="URL do Vídeo 3">
+                            </div>
+                            <div class="form-group">
+                                <label>📄 Upload da Apostila Completa (PDF)</label>
+                                <input type="file" id="admPdfFile" class="form-control" accept=".pdf">
+                                <span class="form-hint" id="pdfStatusHint">Nenhum PDF salvo para este módulo.</span>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>📝 Link do Formulário / Google Forms (Avaliação Final - Corte 7.0)</label>
+                                <input type="text" id="admQuizUrl" class="form-control" placeholder="https://forms.google.com/link-da-sua-prova">
+                            </div>
+                        </div>
+                        <button class="btn-action btn-primary" style="width: fit-content; padding: 10px 24px; margin-top: 10px;" onclick="saveAdminModuleData()">Salvar Módulo Completo</button>
+                    </div>
+
+                    <div style="background: var(--card-bg); padding: 24px; border-radius: 10px; border: 1px solid var(--border-color);">
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">📊 Coleta de Resultados das Avaliações (Nota ≥ 7,0)</h3>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Colaborador</th>
+                                    <th>Treinamento</th>
+                                    <th>Data Tentativa</th>
+                                    <th>Nota Obtida</th>
+                                    <th>Status</th>
+                                    <th>Certificado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Larissa B.</strong></td>
+                                    <td>Onboarding & Cultura VMT</td>
+                                    <td>12/10/2026</td>
+                                    <td><strong style="color: var(--status-green);">9,5 / 10</strong></td>
+                                    <td><span class="tag-status tag-concluido">Aprovado</span></td>
+                                    <td><a href="#" style="color: var(--primary-blue); font-weight: 600;">Emitido (PDF)</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fernanda P.</strong></td>
+                                    <td>Prevenção ao Assédio (Lei 14.457)</td>
+                                    <td>20/10/2026</td>
+                                    <td><strong style="color: var(--status-green);">8,0 / 10</strong></td>
+                                    <td><span class="tag-status tag-concluido">Aprovado</span></td>
+                                    <td><a href="#" style="color: var(--primary-blue); font-weight: 600;">Emitido (PDF)</a></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Douglas N.</strong></td>
+                                    <td>Segurança da Informação & LGPD</td>
+                                    <td>24/10/2026</td>
+                                    <td><strong style="color: var(--status-red);">5,5 / 10</strong></td>
+                                    <td><span class="tag-status tag-atencao">Reprovado (&lt; 7.0)</span></td>
+                                    <td><span style="color: var(--text-muted);">Aguardando Refazer</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW 6: CONFIGURAÇÕES DA CONTA -->
+                <div id="viewSettings" style="display: none; flex-direction: column; gap: 24px;">
+                    <div class="eco-banner">
+                        <div class="eco-banner-info">
+                            <h2><span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span> Configurações da Conta</h2>
+                            <p>Gerencie seus dados pessoais, foto de perfil, preferências e segurança de acesso.</p>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--card-bg); padding: 24px; border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 20px;">
+                        <h3 style="font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <span class="icon" style="color: var(--primary-blue);"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Perfil do Colaborador
+                        </h3>
+                        
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div class="user-avatar" style="width: 64px; height: 64px; font-size: 20px;">LB</div>
+                            <button class="btn-action btn-primary" style="width: auto; padding: 8px 16px;"><span class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span> Alterar Foto de Perfil</button>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" class="form-control" value="Larissa B.">
+                            </div>
+
+                            <div class="form-group">
+                                <label>E-mail Corporativo <span class="icon" style="width:12px;height:12px;color:var(--text-muted);"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></label>
+                                <input type="email" class="form-control" value="recrutamento@visionmarinetraining.com" disabled>
+                                <span class="form-hint">Para alterações de e-mail corporativo, contate a TI.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Área / Cargo <span class="icon" style="width:12px;height:12px;color:var(--text-muted);"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></label>
+                                <input type="text" class="form-control" value="RH Interno (Gente & Gestão)" disabled>
+                                <span class="form-hint">Definido oficialmente pelo departamento de RH.</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Data de Admissão <span class="icon" style="width:12px;height:12px;color:var(--text-muted);"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></label>
+                                <input type="text" class="form-control" value="14/09/2026 (1 ano de VMT)" disabled>
+                            </div>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 8px 0;">
+
+                        <h3 style="font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.778-7.778zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span> Segurança & Acesso
+                        </h3>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label>Senha Atual</label>
+                                <input type="password" class="form-control" value="********">
+                            </div>
+                            <div class="form-group">
+                                <label>Nova Senha</label>
+                                <input type="password" class="form-control" placeholder="Mínimo 8 caracteres">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirmar Nova Senha</label>
+                                <input type="password" class="form-control" placeholder="Repita a nova senha">
+                            </div>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 8px 0;">
+
+                        <h3 style="font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                            <span class="icon" style="color: var(--primary-blue);"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span> Preferências de Notificação
+                        </h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-weight: 400; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: var(--accent-yellow);"> Receber lembretes por e-mail sobre treinamentos perto do vencimento
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-weight: 400; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: var(--accent-yellow);"> Notificar quando um novo certificado for liberado
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; font-weight: 400; cursor: pointer;">
+                                <input type="checkbox" checked style="accent-color: var(--accent-yellow);"> Atualizações mensais do Ranking e prêmio do mês
+                            </label>
+                        </div>
+
+                        <div style="margin-top: 12px;">
+                            <button class="btn-action btn-yellow" style="width: fit-content; padding: 12px 28px;" onclick="alert('Configurações salvas com sucesso!')">
+                                Salvar Alterações
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 7: SUPORTE RH E TI -->
+                <div id="viewSupport" style="display: none; flex-direction: column; gap: 24px;">
+                    <div class="eco-banner">
+                        <div class="eco-banner-info">
+                            <h2><span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Central de Suporte & Canais de Atendimento</h2>
+                            <p>Entre em contato direto com a equipe de RH ou abra chamados de TI e Sistemas.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: var(--card-bg); padding: 24px; border-radius: 10px; border: 1px solid var(--border-color);">
+                            <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Abrir Chamado / Solicitação</h3>
+                            <div class="form-group">
+                                <label>Área Responsável</label>
+                                <select class="form-control">
+                                    <option>TI & Sistemas (Suporte Técnico, Senhas, Erros no Portal)</option>
+                                    <option>Recrutamento & RH (Dúvidas sobre Módulos e Certificados)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Sua Mensagem</label>
+                                <textarea class="form-control" rows="4" placeholder="Descreva sua dúvida ou problema técnico..."></textarea>
+                            </div>
+                            <button class="btn-action btn-yellow" onclick="alert('Chamado enviado com sucesso!')">Enviar Chamado</button>
+                        </div>
+
+                        <div style="background: var(--card-bg); padding: 24px; border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 20px;">
+                            <h3 style="font-size: 16px; font-weight: 700;">Canais Diretos de Contato</h3>
+                            <div style="padding: 12px; background: var(--bg-main); border-radius: 8px; border-left: 4px solid var(--primary-blue);">
+                                <h4 style="font-size: 13px; font-weight: 700; color: var(--primary-blue);">TI & Sistemas</h4>
+                                <p style="font-size: 12px; color: var(--text-dark); margin-top: 4px;">E-mail: suporte.ti@visionmarinetraining.com</p>
+                            </div>
+                            <div style="padding: 12px; background: var(--bg-main); border-radius: 8px; border-left: 4px solid var(--accent-yellow);">
+                                <h4 style="font-size: 13px; font-weight: 700; color: #B45309;">Recrutamento & RH Interno</h4>
+                                <p style="font-size: 12px; color: var(--text-dark); margin-top: 4px;">E-mail: recrutamento@visionmarinetraining.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT PANEL -->
+            <div class="right-panel">
+                <div class="panel-block">
+                    <div class="block-title">
+                        <span class="icon" style="color: var(--accent-yellow);"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span> Ranking do Time
+                    </div>
+                    <div class="ranking-list">
+                        <div class="ranking-item me">
+                            <span class="rank-pos">1º</span>
+                            <div class="rank-avatar" style="background: var(--primary-blue); color: #FFF;">LB</div>
+                            <div class="rank-info">
+                                <div class="rank-name">Larissa B.</div>
+                                <div class="rank-role">RH Interno</div>
+                            </div>
+                            <span class="rank-pts">1.250 pts</span>
+                        </div>
+                        <div class="ranking-item">
+                            <span class="rank-pos">2º</span>
+                            <div class="rank-avatar">FP</div>
+                            <div class="rank-info">
+                                <div class="rank-name">Fernanda P.</div>
+                                <div class="rank-role">RH Externo</div>
+                            </div>
+                            <span class="rank-pts">980 pts</span>
+                        </div>
+                        <div class="ranking-item">
+                            <span class="rank-pos">3º</span>
+                            <div class="rank-avatar">DN</div>
+                            <div class="rank-info">
+                                <div class="rank-name">Douglas N.</div>
+                                <div class="rank-role">DP / Transacional</div>
+                            </div>
+                            <span class="rank-pts">840 pts</span>
+                        </div>
+                        <div class="ranking-item">
+                            <span class="rank-pos">4º</span>
+                            <div class="rank-avatar">MS</div>
+                            <div class="rank-info">
+                                <div class="rank-name">Marcelo S.</div>
+                                <div class="rank-role">Gestão Financeira</div>
+                            </div>
+                            <span class="rank-pts">710 pts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-block">
+                    <div class="block-title"><span class="icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> Meu Desempenho</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 4px;">
+                                <span>Conclusão Geral</span>
+                                <span style="color: var(--status-green);">75%</span>
+                            </div>
+                            <div style="width: 100%; height: 8px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 75%; height: 100%; background: var(--status-green);"></div>
+                            </div>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between;">
+                            <span>Certificados: <strong>1/6</strong></span>
+                            <span>Horas: <strong>18h</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL DE NAVEGAÇÃO DE AULAS POR ABAS INTERNAS -->
+    <div class="modal-overlay" id="modalClass">
+        <div class="modal-body">
+            <button class="modal-close" onclick="closeModal()"><span class="icon"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button>
+            
+            <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--primary-blue);" id="modalTitle">Nome do Curso</h3>
+
+            <!-- NAVEGAÇÃO INTERNA POR ABAS -->
+            <div class="lesson-tabs">
+                <button class="lesson-tab active" id="btnL1" onclick="switchLessonTab(1)">📹 Aula 1</button>
+                <button class="lesson-tab" id="btnL2" onclick="switchLessonTab(2)">📹 Aula 2</button>
+                <button class="lesson-tab" id="btnL3" onclick="switchLessonTab(3)">📹 Aula 3</button>
+                <button class="lesson-tab" id="btnPDF" onclick="switchLessonTab('pdf')">📄 Apostila (PDF)</button>
+                <button class="lesson-tab" id="btnQuiz" onclick="switchLessonTab('quiz')">📝 Avaliação Final (Nota 7.0)</button>
+            </div>
+
+            <!-- CONTEÚDO AULA 1 -->
+            <div id="tabContent1">
+                <div class="video-box" id="modalBoxV1">
+                    <span class="icon" style="width:48px;height:48px;color:var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
+                    <span>Player de Vídeo — Aula 1 (Pílula de 5 a 10 min)</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted);">Assista ao primeiro vídeo explicativo sobre as diretrizes deste módulo.</p>
+            </div>
+
+            <!-- CONTEÚDO AULA 2 -->
+            <div id="tabContent2" style="display: none;">
+                <div class="video-box" id="modalBoxV2">
+                    <span class="icon" style="width:48px;height:48px;color:var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
+                    <span>Player de Vídeo — Aula 2 (Aprofundamento)</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted);">Segunda parte do conteúdo com exemplos práticos do dia a dia marítimo.</p>
+            </div>
+
+            <!-- CONTEÚDO AULA 3 -->
+            <div id="tabContent3" style="display: none;">
+                <div class="video-box" id="modalBoxV3">
+                    <span class="icon" style="width:48px;height:48px;color:var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
+                    <span>Player de Vídeo — Aula 3 (Conclusão)</span>
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted);">Fechamento das orientações gerais e preparação para o questionário.</p>
+            </div>
+
+            <!-- CONTEÚDO PDF -->
+            <div id="tabContentPDF" style="display: none; flex-direction: column; gap: 12px;">
+                <div style="background: var(--bg-main); padding: 20px; border-radius: 8px; text-align: center; border: 1px dashed var(--border-color);">
+                    <span class="icon" style="width:40px;height:40px;color:var(--primary-blue); margin-bottom: 8px;"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+                    <h4 style="font-size: 14px; font-weight: 700;">Apostila Completa do Módulo em PDF</h4>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;" id="modalPdfNameText">Material de leitura rápida complementar ou substitutivo às videoaulas.</p>
+                    <button class="btn-action btn-yellow" style="width: fit-content; margin: 12px auto 0 auto; padding: 8px 20px;" onclick="downloadModulePDF()">Visualizar / Baixar Apostila PDF</button>
+                </div>
+            </div>
+
+            <!-- CONTEÚDO QUESTIONÁRIO -->
+            <div id="tabContentQuiz" style="display: none; flex-direction: column; gap: 14px;">
+                <div style="background: var(--status-yellow-bg); padding: 10px; border-radius: 6px; font-size: 12px; color: #B45309;">
+                    ⚠️ **Atenção:** Alcance nota **7,0 ou mais** para ter o certificado liberado na sua galeria.
+                </div>
+
+                <div id="modalQuizArea">
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; font-size: 12px;">
+                        <strong>1. Qual a principal diretriz de conformidade abordada neste módulo?</strong>
+                        <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+                            <label><input type="radio" name="q1" value="a"> A) Seguir estritamente os protocolos e o código de conduta da VMT.</label>
+                            <label><input type="radio" name="q1" value="b"> B) Ignorar os prazos pré-estabelecidos no calendário.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-action btn-yellow" onclick="submitQuiz()">Finalizar Avaliação e Enviar Notas</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // SISTEMA DE BANCO DE DADOS EM MEMÓRIA LOCAL (PERSISTÊNCIA VIA LOCALSTORAGE)
+        let activeModuleTitle = "";
+
+        function getStoredData() {
+            const data = localStorage.getItem('vmt_modules_db');
+            return data ? JSON.parse(data) : {};
+        }
+
+        function saveStoredData(data) {
+            localStorage.setItem('vmt_modules_db', JSON.stringify(data));
+        }
+
+        const monthData = {
+            outubro: {
+                prizeTag: "🎁 Prêmio de Engajamento — Mês de Outubro",
+                prizeTitle: "Voucher Almoço Executivo / Spa Day",
+                birthdays: ["Rogério Peixoto (19/10)", "Raquel Spalla (25/10)", "Luis Quesada (26/10)"],
+                companyYears: ["Juliana Costa — 8 Anos de VMT!", "Gutemberg Vieira — 3 Anos de VMT!", "Laysa Silveira — 3 Anos de VMT!", "Larissa Fernandes — 3 Anos de VMT!"],
+                campaigns: [
+                    { title: "🎗️ Outubro Rosa (07/10)", status: "Campanha Ativa", tagClass: "tag-atencao" },
+                    { title: "⚙️ Dia do Oficial de Máquinas (15/10)", status: "Homenagem", tagClass: "tag-concluido" },
+                    { title: "💻 Dia do Profissional de TI (19/10)", status: "Homenagem", tagClass: "tag-concluido" }
+                ]
+            },
+            novembro: {
+                prizeTag: "🎁 Prêmio de Engajamento — Mês de Novembro",
+                prizeTitle: "Kit Experiência Gourmet / Voucher Jantar",
+                birthdays: ["Alexandre Andrade (05/11)", "Cleidiane Paiva (25/11)"],
+                companyYears: ["Giselle B. — 5 Anos de VMT!", "Marcos V. — 2 Anos de VMT!"],
+                campaigns: [
+                    { title: "💙 Novembro Azul (05/11)", status: "Campanha Ativa", tagClass: "tag-atencao" },
+                    { title: "🚢 Dia do Marítimo & Navegação (12/11)", status: "Homenagem", tagClass: "tag-concluido" }
+                ]
+            },
+            dezembro: {
+                prizeTag: "🎁 Prêmio de Engajamento — Mês de Dezembro",
+                prizeTitle: "Cesta Premium de Fim de Ano & Voucher",
+                birthdays: ["Mariana Silva (10/12)", "Carlos Eduardo (22/12)"],
+                companyYears: ["Rodrigo M. — 4 Anos de VMT!", "Fernanda P. — 2 Anos de VMT!"],
+                campaigns: [
+                    { title: "⚓ Dia do Marinheiro (13/12)", status: "Ação Especial", tagClass: "tag-atencao" },
+                    { title: "🎄 Festividades & Confraternização VMT", status: "Em Breve", tagClass: "tag-pendente" }
+                ]
+            }
+        };
+
+        function changeMonth(month) {
+            document.getElementById('mOut').className = 'month-btn' + (month === 'outubro' ? ' active' : '');
+            document.getElementById('mNov').className = 'month-btn' + (month === 'novembro' ? ' active' : '');
+            document.getElementById('mDez').className = 'month-btn' + (month === 'dezembro' ? ' active' : '');
+
+            const data = monthData[month];
+            document.getElementById('prizeTag').innerText = data.prizeTag;
+            document.getElementById('prizeTitle').innerText = data.prizeTitle;
+
+            const bList = document.getElementById('birthdaysList');
+            bList.innerHTML = '';
+            data.birthdays.forEach(b => bList.innerHTML += `<li>${b}</li>`);
+
+            const cList = document.getElementById('companyYearsList');
+            cList.innerHTML = '';
+            data.companyYears.forEach(c => cList.innerHTML += `<li>${c}</li>`);
+
+            const cmpList = document.getElementById('campaignsList');
+            cmpList.innerHTML = '';
+            data.campaigns.forEach((cmp, index) => {
+                const border = index < data.campaigns.length - 1 ? 'border-bottom: 1px solid var(--border-color);' : '';
+                cmpList.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 8px; ${border}">
+                        <span>${cmp.title}</span>
+                        <span class="tag-status ${cmp.tagClass}">${cmp.status}</span>
+                    </div>
+                `;
+            });
+        }
+
+        const dataHorizonte = [
+            { title: "Apresentação sobre a Empresa", desc: "História, valores, propósito e atuação da Vision Marine Training.", tag: "Concluído", tagClass: "tag-concluido", time: "15 min" },
+            { title: "Nossa Estrutura Orgânica", desc: "Visão dos departamentos, organograma funcional e governança.", tag: "Concluído", tagClass: "tag-concluido", time: "20 min" },
+            { title: "Nossos Treinamentos & Serviços", desc: "Portfólio de cursos marítimos, certificações e simulações prestadas.", tag: "Atenção", tagClass: "tag-atencao", time: "30 min" },
+            { title: "Sobre o Nosso Mercado & Clientes", desc: "Quem são nossos clientes estratégicos do setor offshore e náutico.", tag: "Pendente", tagClass: "tag-pendente", time: "25 min" },
+            { title: "Código de Conduta & Políticas", desc: "Diretrizes de ética, relacionamento profissional e regras internas.", tag: "Pendente", tagClass: "tag-pendente", time: "40 min" },
+            { title: "Segurança da Informação & LGPD", desc: "Uso seguro de sistemas, proteção de dados e conformidade legal.", tag: "Atenção", tagClass: "tag-atencao", time: "35 min" }
+        ];
+
+        const dataNavegando = [
+            { title: "Condução de Entrevistas & R&S", desc: "Metodologia para seleção assertiva de talentos no RH Interno.", tag: "Concluído", tagClass: "tag-concluido", time: "45 min" },
+            { title: "Cultura de Feedback & 1-on-1s", desc: "Como planejar e conduzir reuniões individuais de desenvolvimento.", tag: "Pendente", tagClass: "tag-pendente", time: "50 min" },
+            { title: "Inteligência Emocional na Gestão", desc: "Autoconhecimento, controle de estresse e relações de trabalho.", tag: "Pendente", tagClass: "tag-pendente", time: "1h 10m" },
+            { title: "Gestão do Tempo & Produtividade", desc: "Priorização de demandas, prazos e rotina de alta performance.", tag: "Pendente", tagClass: "tag-pendente", time: "40 min" },
+            { title: "Liderança Náutica & Clima", desc: "Como identificar oscilações de clima no time e atuar proativamente.", tag: "Pendente", tagClass: "tag-pendente", time: "1h 00m" }
+        ];
+
+        function showView(view) {
+            const views = ['viewDashboard', 'viewCertificates', 'viewAgenda', 'viewNews', 'viewAdmin', 'viewSettings', 'viewSupport'];
+            const navs = ['navDash', 'navCert', 'navAgenda', 'navNews', 'navAdmin', 'navConfig', 'navSupport'];
+            const ecoHeader = document.getElementById('ecosystemHeader');
+
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                if (el) el.style.display = 'none';
+            });
+            navs.forEach(n => {
+                const el = document.getElementById(n);
+                if (el) el.className = 'nav-item';
+            });
+
+            if (view === 'dashboard') {
+                document.getElementById('viewDashboard').style.display = 'flex';
+                document.getElementById('navDash').className = 'nav-item active';
+                ecoHeader.style.visibility = 'visible';
+            } else if (view === 'certificates') {
+                document.getElementById('viewCertificates').style.display = 'flex';
+                document.getElementById('navCert').className = 'nav-item active';
+                ecoHeader.style.visibility = 'hidden';
+            } else if (view === 'agenda') {
+                document.getElementById('viewAgenda').style.display = 'flex';
+                document.getElementById('navAgenda').className = 'nav-item active';
+                ecoHeader.style.visibility = 'hidden';
+            } else if (view === 'news') {
+                document.getElementById('viewNews').style.display = 'flex';
+                document.getElementById('navNews').className = 'nav-item active';
+                ecoHeader.style.visibility = 'hidden';
+            } else if (view === 'admin') {
+                document.getElementById('viewAdmin').style.display = 'flex';
+                document.getElementById('navAdmin').className = 'nav-item active';
+                ecoHeader.style.visibility = 'hidden';
+                loadAdminModuleData(document.getElementById('adminSelectModule').value);
+            } else if (view === 'settings') {
+                document.getElementById('viewSettings').style.display = 'flex';
+                document.getElementById('navConfig').className = 'nav-item active';
+                ecoHeader.style.visibility = 'hidden';
+            } else if (view === 'support') {
+                document.getElementById('viewSupport').style.display = 'flex';
+                document.getElementById('navSupport').className = 'nav-item active';
+                ecoHeader.style.visibility = 'hidden';
+            }
+        }
+
+        function switchEcosystem(type) {
+            showView('dashboard');
+            const tabH = document.getElementById('tabHorizonte');
+            const tabN = document.getElementById('tabNavegando');
+            const title = document.getElementById('ecoTitle');
+            const desc = document.getElementById('ecoDesc');
+            const badge = document.getElementById('ecoBadge');
+            const gridTitle = document.getElementById('gridTitle');
+
+            if (type === 'horizonte') {
+                tabH.className = 'eco-tab active-horizonte';
+                tabN.className = 'eco-tab';
+                title.innerHTML = '<span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span> Horizonte Vision';
+                desc.innerText = 'Portal Institucional, Onboarding e Diretrizes Obrigatórias da Vision Marine Training.';
+                badge.className = 'badge-eco badge-horizonte';
+                badge.innerText = 'Institucional & Integração';
+                gridTitle.innerText = 'Módulos Obrigatórios & Onboarding';
+                renderCourses(dataHorizonte);
+            } else {
+                tabN.className = 'eco-tab active-navegando';
+                tabH.className = 'eco-tab';
+                title.innerHTML = '<span class="icon"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></span> Navegando Carreiras';
+                desc.innerText = 'Trilhas de Desenvolvimento Pessoal, Liderança e Evolução Profissional do Colaborador.';
+                badge.className = 'badge-eco badge-navegando';
+                badge.innerText = 'Desenvolvimento & Carreira';
+                gridTitle.innerText = 'Trilhas de Evolução Profissional';
+                renderCourses(dataNavegando);
+            }
+        }
+
+        function renderCourses(courses) {
+            const grid = document.getElementById('coursesGrid');
+            grid.innerHTML = '';
+            courses.forEach(c => {
+                grid.innerHTML += `
+                    <div class="course-card">
+                        <div>
+                            <div class="card-header-tag">
+                                <span class="tag-status ${c.tagClass}">${c.tag}</span>
+                                <span style="font-size: 11px; color: var(--text-light);"><span class="icon" style="width:12px;height:12px;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span> ${c.time}</span>
+                            </div>
+                            <div class="course-title">${c.title}</div>
+                            <div class="course-desc">${c.desc}</div>
+                        </div>
+                        <div>
+                            <button class="btn-action btn-primary" onclick="openModal('${c.title}')">
+                                <span class="icon" style="width:14px;height:14px;"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> Acessar Módulo
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleAdminRole(role) {
+            const adminSec = document.getElementById('adminMenuSection');
+            const roleDisp = document.getElementById('roleDisplay');
+
+            if (role === 'editor') {
+                adminSec.style.display = 'block';
+                roleDisp.innerText = 'Editor / Gestão RH & TI';
+                alert('Modo Editor Ativado! A aba "Painel RH & Resultados" foi liberada na barra lateral.');
+            } else {
+                adminSec.style.display = 'none';
+                roleDisp.innerText = 'RH Interno';
+                showView('dashboard');
+            }
+        }
+
+        function setTheme(mode) {
+            const btnL = document.getElementById('btnThemeLight');
+            const btnD = document.getElementById('btnThemeDark');
+            const btnA = document.getElementById('btnThemeAuto');
+
+            btnL.className = 'theme-btn';
+            btnD.className = 'theme-btn';
+            btnA.className = 'theme-btn';
+
+            if (mode === 'light') {
+                document.body.classList.remove('dark-theme');
+                btnL.className = 'theme-btn active';
+            } else if (mode === 'dark') {
+                document.body.classList.add('dark-theme');
+                btnD.className = 'theme-btn active';
+            } else if (mode === 'auto') {
+                btnA.className = 'theme-btn active';
+                const hour = new Date().getHours();
+                if (hour >= 18 || hour < 6) {
+                    document.body.classList.add('dark-theme');
+                } else {
+                    document.body.classList.remove('dark-theme');
+                }
+            }
+        }
+
+        // FUNÇÕES DO PAINEL ADM (GRAVAÇÃO E CONEXÃO REAL)
+        function loadAdminModuleData(selectedModule) {
+            const db = getStoredData();
+            const mod = db[selectedModule] || {};
+
+            document.getElementById('admVideo1').value = mod.v1 || '';
+            document.getElementById('admVideo2').value = mod.v2 || '';
+            document.getElementById('admVideo3').value = mod.v3 || '';
+            document.getElementById('admQuizUrl').value = mod.quiz || '';
+            
+            const hint = document.getElementById('pdfStatusHint');
+            if (mod.pdfName) {
+                hint.innerText = `PDF Cadastrado: "${mod.pdfName}"`;
+                hint.style.color = "var(--status-green)";
+            } else {
+                hint.innerText = "Nenhum PDF salvo para este módulo.";
+                hint.style.color = "var(--text-muted)";
+            }
+        }
+
+        function saveAdminModuleData() {
+            const selectedModule = document.getElementById('adminSelectModule').value;
+            const db = getStoredData();
+            if (!db[selectedModule]) db[selectedModule] = {};
+
+            db[selectedModule].v1 = document.getElementById('admVideo1').value;
+            db[selectedModule].v2 = document.getElementById('admVideo2').value;
+            db[selectedModule].v3 = document.getElementById('admVideo3').value;
+            db[selectedModule].quiz = document.getElementById('admQuizUrl').value;
+
+            const fileInput = document.getElementById('admPdfFile');
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    db[selectedModule].pdfData = e.target.result; // Converte em string Base64 para persistência
+                    db[selectedModule].pdfName = file.name;
+                    saveStoredData(db);
+                    alert(`O PDF "${file.name}" e os dados do módulo foram salvos com sucesso no sistema!`);
+                    loadAdminModuleData(selectedModule);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                saveStoredData(db);
+                alert(`Dados do módulo "${selectedModule}" salvos com sucesso!`);
+                loadAdminModuleData(selectedModule);
+            }
+        }
+
+        // FUNÇÕES DO MODAL PARA O COLABORADOR
+        function openModal(title) {
+            activeModuleTitle = title;
+            document.getElementById('modalTitle').innerText = title;
+
+            const db = getStoredData();
+            const mod = db[title] || {};
+
+            // Atualiza player de vídeos
+            updateVideoBox('modalBoxV1', mod.v1, 'Aula 1');
+            updateVideoBox('modalBoxV2', mod.v2, 'Aula 2');
+            updateVideoBox('modalBoxV3', mod.v3, 'Aula 3');
+
+            // Atualiza texto do PDF
+            const pdfTxt = document.getElementById('modalPdfNameText');
+            if (mod.pdfName) {
+                pdfTxt.innerText = `Apostila Disponível: ${mod.pdfName}`;
+            } else {
+                pdfTxt.innerText = `Material de leitura rápida complementar ou substitutivo às videoaulas.`;
+            }
+
+            // Atualiza questionário
+            const quizArea = document.getElementById('modalQuizArea');
+            if (mod.quiz && mod.quiz.trim() !== "") {
+                quizArea.innerHTML = `<iframe src="${mod.quiz}" width="100%" height="300" frameborder="0" style="border-radius:6px;"></iframe>`;
+            } else {
+                quizArea.innerHTML = `
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: 8px; font-size: 12px;">
+                        <strong>1. Qual a principal diretriz de conformidade abordada neste módulo?</strong>
+                        <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+                            <label><input type="radio" name="q1" value="a"> A) Seguir estritamente os protocolos e o código de conduta da VMT.</label>
+                            <label><input type="radio" name="q1" value="b"> B) Ignorar os prazos pré-estabelecidos no calendário.</label>
+                        </div>
+                    </div>
+                `;
+            }
+
+            switchLessonTab(1);
+            document.getElementById('modalClass').style.display = 'flex';
+        }
+
+        function updateVideoBox(boxId, videoUrl, label) {
+            const el = document.getElementById(boxId);
+            if (videoUrl && videoUrl.trim() !== '') {
+                el.innerHTML = `<iframe src="${videoUrl}" width="100%" height="100%" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>`;
+            } else {
+                el.innerHTML = `
+                    <span class="icon" style="width:48px;height:48px;color:var(--accent-yellow);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
+                    <span>Player de Vídeo — ${label}</span>
+                `;
+            }
+        }
+
+        function downloadModulePDF() {
+            const db = getStoredData();
+            const mod = db[activeModuleTitle];
+
+            if (mod && mod.pdfData) {
+                const win = window.open();
+                win.document.write(`<iframe src="${mod.pdfData}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+            } else {
+                alert(`Nenhum documento PDF foi anexado para o módulo "${activeModuleTitle}". O gestor do RH precisa subir o arquivo no Painel do Editor.`);
+            }
+        }
+
+        function switchLessonTab(tab) {
+            const tabs = ['btnL1', 'btnL2', 'btnL3', 'btnPDF', 'btnQuiz'];
+            const contents = ['tabContent1', 'tabContent2', 'tabContent3', 'tabContentPDF', 'tabContentQuiz'];
+
+            tabs.forEach(t => document.getElementById(t).className = 'lesson-tab');
+            contents.forEach(c => document.getElementById(c).style.display = 'none');
+
+            if (tab === 1) {
+                document.getElementById('btnL1').className = 'lesson-tab active';
+                document.getElementById('tabContent1').style.display = 'block';
+            } else if (tab === 2) {
+                document.getElementById('btnL2').className = 'lesson-tab active';
+                document.getElementById('tabContent2').style.display = 'block';
+            } else if (tab === 3) {
+                document.getElementById('btnL3').className = 'lesson-tab active';
+                document.getElementById('tabContent3').style.display = 'block';
+            } else if (tab === 'pdf') {
+                document.getElementById('btnPDF').className = 'lesson-tab active';
+                document.getElementById('tabContentPDF').style.display = 'flex';
+            } else if (tab === 'quiz') {
+                document.getElementById('btnQuiz').className = 'lesson-tab active';
+                document.getElementById('tabContentQuiz').style.display = 'flex';
+            }
+        }
+
+        function submitQuiz() {
+            alert('Parabéns! Você alcançou Nota 10,0/10,0 (Aprovado com sucesso!).\n\nSeu certificado foi emitido automaticamente na aba "Meus Certificados"!');
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modalClass').style.display = 'none';
+        }
+
+        switchEcosystem('horizonte');
+    </script>
+</body>
+</html>
